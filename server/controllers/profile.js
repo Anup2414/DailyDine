@@ -92,7 +92,6 @@ exports.deleteAccount = async (req, res) => {
       .status(500)
       .json({ success: false, message: "User Cannot be deleted successfully" })
   }
-
 }
 
 exports.getAllUserDetails = async (req, res) => {

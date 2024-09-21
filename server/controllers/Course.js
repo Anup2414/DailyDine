@@ -49,8 +49,6 @@ exports.createCourse = async (req, res) => {
         message: "All Fields are Mandatory",
       })
     }
-
-
     if (!status || status === undefined) {
       status = "Draft"
     }
@@ -65,8 +63,6 @@ exports.createCourse = async (req, res) => {
         message: "Instructor Details Not Found",
       })
     }
-
-
 
     // Check if the tag given is valid
     const categoryDetails = await Category.findById(category)

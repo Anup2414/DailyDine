@@ -163,8 +163,7 @@ exports.login = async (req, res) => {
         user,
         message: `User Login Success`,
       })
-    } 
-    else {
+    } else {
       return res.status(401).json({
         success: false,
         message: `Password is incorrect`,
