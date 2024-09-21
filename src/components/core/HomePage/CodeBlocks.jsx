@@ -1,7 +1,7 @@
 import React from "react";
-import CTAButton from "./Button";
-import { TypeAnimation } from "react-type-animation";
 import { FaArrowRight } from "react-icons/fa";
+import CTAButton from "./Button";
+import imagelofo from "./Logo-Full-Light.png"; // Corrected import statement
 
 const CodeBlocks = ({
   position,
@@ -16,9 +16,8 @@ const CodeBlocks = ({
   return (
     <div className={`flex ${position} my-20 justify-between flex-col lg:gap-10 gap-10`}>
 
-
-      {/* Section 1  */}
-      <div className="w-[100%] lg:w-[50%] flex flex-col gap-8">
+      {/* Section 1 */}
+      <div className="w-full lg:w-1/2 flex flex-col gap-8">
         {heading}
 
         {/* Sub Heading */}
@@ -41,38 +40,15 @@ const CodeBlocks = ({
       </div>
 
       {/* Section 2 */}
-      <div className="h-fit code-border flex flex-row py-3 text-[10px] sm:text-sm leading-[18px] sm:leading-6 relative w-[100%] lg:w-[470px]">
+      <div className="h-fit code-border flex flex-row py-3 text-[10px] sm:text-sm leading-[18px] sm:leading-6 relative w-full lg:w-[470px]">
         {backgroundGradient}
-        {/* Indexing */}
-        <div className="text-center flex flex-col   w-[10%] select-none text-richblack-400 font-inter font-bold ">
-          <p>1</p>
-          <p>2</p>
-          <p>3</p>
-          <p>4</p>
-          <p>5</p>
-          <p>6</p>
-          <p>7</p>
-          <p>8</p>
-          <p>9</p>
-          <p>10</p>
-          <p>11</p>
-        </div>
 
-        {/* Codes */}
-        <div
-          className={`w-[90%] flex flex-col gap-2 font-bold font-mono ${codeColor} pr-1`}
-        >
-          <TypeAnimation
-            sequence={[codeblock, 1000, ""]}
-            cursor={true}
-            repeat={Infinity}
-            style={{
-              whiteSpace: "pre-line",
-              display: "block",
-            }}
-            omitDeletionAnimation={true}
-          />
-        </div>
+        {/* Image with styling */}
+        <img
+          src={imagelofo}
+          alt="Logo - Mess logo"
+          className="w-auto max-h-full object-contain"
+        />
       </div>
     </div>
   );
