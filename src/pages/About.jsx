@@ -12,16 +12,13 @@ import HighlightText from "../components/core/HomePage/HighlightText"
 const About = () => {
   return (
     <div>
-      <section className="bg-richblack-700">
+      {/* <section className="bg-richblack-700">
         <div className="relative mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-center text-white">
           <header className="mx-auto py-20 text-4xl font-semibold lg:w-[70%]">
-            Driving Innovation in Online Education for a
-            <HighlightText text={"Brighter Future"} />
+            Revolutionizing the Mess Experience with 
+            <HighlightText text={"DailyDine"} />
             <p className="mx-auto mt-3 text-center text-base font-medium text-richblack-300 lg:w-[95%]">
-              Studynotion is at the forefront of driving innovation in online
-              education. We're passionate about creating a brighter future by
-              offering cutting-edge courses, leveraging emerging technologies,
-              and nurturing a vibrant learning community.
+              DailyDine is transforming the way hostellers and local diners find their daily meals by bringing mess menus and rates to one accessible platform. We are here to make meal planning easy and convenient.
             </p>
           </header>
           <div className="sm:h-[70px] lg:h-[150px]"></div>
@@ -31,14 +28,14 @@ const About = () => {
             <img src={BannerImage3} alt="" />
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section className="border-b border-richblack-700">
+      {/* <section className="border-b border-richblack-700">
         <div className="mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-richblack-500">
           <div className="h-[100px] "></div>
           <Quote />
         </div>
-      </section>
+      </section> */}
 
       <section>
         <div className="mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-richblack-500">
@@ -48,43 +45,29 @@ const About = () => {
                 Our Founding Story
               </h1>
               <p className="text-base font-medium text-richblack-300 lg:w-[95%]">
-                Our e-learning platform was born out of a shared vision and
-                passion for transforming education. It all began with a group of
-                educators, technologists, and lifelong learners who recognized
-                the need for accessible, flexible, and high-quality learning
-                opportunities in a rapidly evolving digital world.
+                DailyDine was born from the challenges faced by hostellers, especially the daily hassle of finding the best mess menus and rates. The founders, themselves hostellers, realized that there was a better way to streamline meal choices by offering a platform where users can view mess information in one place, saving time and effort.
               </p>
               <p className="text-base font-medium text-richblack-300 lg:w-[95%]">
-                As experienced educators ourselves, we witnessed firsthand the
-                limitations and challenges of traditional education systems. We
-                believed that education should not be confined to the walls of a
-                classroom or restricted by geographical boundaries. We
-                envisioned a platform that could bridge these gaps and empower
-                individuals from all walks of life to unlock their full
-                potential.
+                Whether you're a student, worker, or just someone in search of a local meal, DailyDine was designed to bridge the gap between mess owners and customers. Our platform empowers both users to make informed decisions and mess owners to showcase their offerings to a larger audience.
               </p>
             </div>
 
             <div>
               <img
                 src={FoundingStory}
-                alt=""
+                alt="Founding Story"
                 className="shadow-[0_0_20px_0] shadow-[#FC6767]"
               />
             </div>
           </div>
-          <div className="flex flex-col items-center lg:gap-10 lg:flex-row justify-between">
-            <div className="my-24 flex lg:w-[40%] flex-col gap-10">
+
+          <div className="flex flex-col items-center    lg:gap-8 lg:flex-row justify-between">
+            <div className=" my-16 flex lg:w-[40%] flex-col gap-10">
               <h1 className="bg-gradient-to-b from-[#FF512F] to-[#F09819] bg-clip-text text-4xl font-semibold text-transparent lg:w-[70%] ">
                 Our Vision
               </h1>
               <p className="text-base font-medium text-richblack-300 lg:w-[95%]">
-                With this vision in mind, we set out on a journey to create an
-                e-learning platform that would revolutionize the way people
-                learn. Our team of dedicated experts worked tirelessly to
-                develop a robust and intuitive platform that combines
-                cutting-edge technology with engaging content, fostering a
-                dynamic and interactive learning experience.
+                Our vision is to become the go-to platform for anyone looking to quickly decide on where to eat, ensuring they get the best value and quality. We aim to revolutionize the mess experience by providing transparency, convenience, and seamless access to daily menus and rates in one app.
               </p>
             </div>
             <div className="my-24 flex lg:w-[40%] flex-col gap-10">
@@ -92,7 +75,7 @@ const About = () => {
                 Our Mission
               </h1>
               <p className="text-base font-medium text-richblack-300 lg:w-[95%]">
-                Our mission goes beyond just delivering courses online. We wanted to create a vibrant community of learners, where individuals can connect, collaborate, and learn from one another. We believe that knowledge thrives in an environment of sharing and dialogue, and we foster this spirit of collaboration through forums, live sessions, and networking opportunities.
+                Our mission is to simplify the meal decision process for our users while giving mess owners an effective way to engage with potential customers. We provide a reliable and user-friendly platform to ensure daily dining choices are informed, easy, and enjoyable for everyone involved.
               </p>
             </div>
           </div>
@@ -100,8 +83,6 @@ const About = () => {
       </section>
 
       <StatsComponenet />
-
-
 
       <Footer />
     </div>
