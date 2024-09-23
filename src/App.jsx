@@ -128,7 +128,7 @@ function App() {
                 path="dashboard/enrolled-courses"
                 element={<EnrolledCourses />}
               />
-              <Route path="/dashboard/cart" element={<Cart />} />
+              {/* <Route path="/dashboard/cart" element={<Cart />} /> */}
             </>
           )}
           <Route path="dashboard/settings" element={<Settings />} />

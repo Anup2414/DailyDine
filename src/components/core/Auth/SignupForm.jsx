@@ -74,12 +74,12 @@ const handleOnChange = (e) => {
 const tabData = [
   {
     id: 1,
-    tabName: "Student",
+    tabName: "Visitor",
     type: ACCOUNT_TYPE.STUDENT,
   },
   {
     id: 2,
-    tabName: "Instructor",
+    tabName: "MessOwner",
     type: ACCOUNT_TYPE.INSTRUCTOR,
   },
 ]
