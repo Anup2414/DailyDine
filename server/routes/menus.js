@@ -1,6 +1,7 @@
 const express = require("express");
 const Menu = require("../models/Menu");
 const { auth, messOwnerAuth } = require("../middleware/auth");
+const { localUpload } = require("../utils/imageUpload");
 const router = express.Router();
 
 // Get all menus for today
@@ -83,6 +84,27 @@ router.get("/my-menu", messOwnerAuth, async (req, res) => {
   } catch (error) {
     console.error("Get my menu error:", error);
     res.status(500).json({ message: "Failed to fetch menu" });
+  }
+});
+
+// Upload menu item image
+router.post("/upload-image", messOwnerAuth, localUpload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No image file provided" });
+    }
+
+    // Return the file path or URL
+    const imageUrl = `/uploads/food-images/${req.file.filename}`;
+    
+    res.json({ 
+      message: "Image uploaded successfully", 
+      imageUrl: imageUrl,
+      filename: req.file.filename 
+    });
+  } catch (error) {
+    console.error("Upload image error:", error);
+    res.status(500).json({ message: "Failed to upload image" });
   }
 });
 

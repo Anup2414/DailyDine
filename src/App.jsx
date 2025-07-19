@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux"
 // React Router
 import { Route, Routes, useNavigate } from "react-router-dom"
 
+// Theme Context
+import { ThemeProvider } from "./contexts/ThemeContext"
+
 // Components
 import Navbar from "./components/Common/Navbar"
 import OpenRoute from "./components/core/Auth/OpenRoute"
@@ -39,9 +42,10 @@ function App() {
   }, [])
 
   return (
-    <div className="flex min-h-screen w-screen flex-col bg-gray-50 font-inter">
-      <Navbar />
-      <Routes>
+    <ThemeProvider>
+      <div className="flex min-h-screen w-screen flex-col bg-gray-50 dark:bg-gray-900 font-inter transition-colors duration-300">
+        <Navbar />
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/nearby" element={<NearbyMesses />} />
         <Route path="/mess/:messId" element={<MessDetails />} />
@@ -95,7 +99,8 @@ function App() {
         {/* 404 Page */}
         <Route path="*" element={<Error />} />
       </Routes>
-    </div>
+      </div>
+    </ThemeProvider>
   )
 }
 
