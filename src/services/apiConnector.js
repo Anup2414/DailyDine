@@ -1,14 +1,36 @@
 import axios from "axios";
 
-export const axiosInstance = axios.create({});
+const apiConnector = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export const apiConnector = (method, url, bodyData, headers, params) => {
-  return axiosInstance(
-    {
-    method: `${method}`,
-    url: `${url}`,
-    data: bodyData ? bodyData : null,
-    headers: headers ? headers : null,
-    params: params ? params : null,
-  });
-};
+// Add a request interceptor to include the token
+apiConnector.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor to handle errors
+apiConnector.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default apiConnector;
