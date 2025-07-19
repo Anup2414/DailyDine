@@ -1,64 +1,82 @@
 // Importing necessary modules and packages
 const express = require("express");
-const app = express();
-const userRoutes = require("./routes/user");
-const profileRoutes = require("./routes/profile");
-const courseRoutes = require("./routes/Course");
-const paymentRoutes = require("./routes/Payments");
-const contactUsRoute = require("./routes/Contact");
-const database = require("./config/database");
-const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
 const cors = require("cors");
-const { cloudinaryConnect } = require("./config/cloudinary");
-const fileUpload = require("express-fileupload");
+const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const authRoutes = require("./routes/auth");
+const menuRoutes = require("./routes/menus");
+const messRoutes = require("./routes/messes");
+const reviewRoutes = require("./routes/reviews");
+const userRoutes = require("./routes/users");
 const dotenv = require("dotenv");
 
 // Setting up port number
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 // Loading environment variables from .env file
 dotenv.config();
 
-// Connecting to database
-database.connect();
- 
-// Middlewares
+// Security middleware
+const app = express();
+app.use(helmet());
+
+// Rate limiting
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // limit each IP to 100 requests per windowMs
+	message: "Too many requests from this IP, please try again later.",
+});
+app.use("/api", limiter);
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(
 	cors({
-		origin: "*",
+		origin: process.env.FRONTEND_URL || "http://localhost:3000",
 		credentials: true,
 	})
 );
-app.use(
-	fileUpload({
-		useTempFiles: true,
-		tempFileDir: "/tmp/",
-	})
-);
 
-// Connecting to cloudinary
-cloudinaryConnect();
+
+// Database connection
+mongoose
+	.connect(process.env.MONGODB_URL)
+	.then(() => {
+		console.log("Connected to MongoDB");
+	})
+	.catch((error) => {
+		console.error("MongoDB connection error:", error);
+	});
 
 // Setting up routes
-app.use("/api/v1/auth", userRoutes);
-app.use("/api/v1/profile", profileRoutes);
-app.use("/api/v1/course", courseRoutes);
-app.use("/api/v1/payment", paymentRoutes);
-app.use("/api/v1/reach", contactUsRoute);
+app.use("/api/auth", authRoutes);
+app.use("/api/menus", menuRoutes);
+app.use("/api/messes", messRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/users", userRoutes);
 
-// Testing the server
-app.get("/", (req, res) => {
-	return res.json({
-		success: true,
-		message: "Your server is up and running ...",
-	});
+// Health check route
+app.get("/api/health", (req, res) => {
+	res.status(200).json({ message: "DailyDine API is running" });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).json({ message: "Something went wrong!" });
+});
+
+// 404 handler
+app.use("*", (req, res) => {
+	res.status(404).json({ message: "Route not found" });
 });
 
 // Listening to the server
 app.listen(PORT, () => {
-	console.log(`App is listening at ${PORT}`);
+	console.log(`Server is running on port ${PORT}`);
 });
 
 // End of code.

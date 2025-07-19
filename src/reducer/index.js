@@ -1,17 +1,13 @@
 import { combineReducers } from "@reduxjs/toolkit"
 
 import authReducer from "../slices/authSlice"
-import cartReducer from "../slices/cartSlice"
-import courseReducer from "../slices/courseSlice"
-import profileReducer from "../slices/profileSlice"
-import viewCourseReducer from "../slices/viewCourseSlice"
+import menuReducer from "../slices/menuSlice"
+import messReducer from "../slices/messSlice"
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  profile: profileReducer,
-  course: courseReducer,
-  cart: cartReducer,
-  viewCourse: viewCourseReducer,
+  menu: menuReducer,
+  mess: messReducer,
 })
 
 export default rootReducer

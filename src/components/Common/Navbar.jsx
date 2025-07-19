@@ -1,141 +1,202 @@
-import { useEffect, useState } from "react";
-import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
-import { BsChevronDown } from "react-icons/bs";
-import { useSelector } from "react-redux";
-import { Link, matchPath, useLocation } from "react-router-dom";
-
-import logo from "../../assets/Logo/Logo-Full-Light.png";
-import { NavbarLinks } from "../../data/navbar-links";
-import { apiConnector } from "../../services/apiConnector";
-import { categories } from "../../services/apis";
-import { ACCOUNT_TYPE } from "../../utils/constants";
-import ProfileDropdown from "../core/Auth/ProfileDropdown";
+import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaStore, FaMapMarkerAlt } from "react-icons/fa"
+import { logoutUser } from "../../services/operations/authAPI"
 
 const Navbar = () => {
-  const { token } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.profile);
-  const { totalItems } = useSelector((state) => state.cart);
-  const location = useLocation();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { user, token } = useSelector((state) => state.auth)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const [subLinks, setSubLinks] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const handleLogout = () => {
+    dispatch(logoutUser(navigate))
+    setIsMenuOpen(false)
+  }
 
-  // Fetch categories on component mount
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoading(true);
-      try {
-        const res = await apiConnector("GET", categories.CATEGORIES_API);
-        const data = res.data.data;
-        setSubLinks(data);
-      } catch (error) {
-        console.error("Could not fetch Categories.", error);
-      }
-      setLoading(false);
-    };
-
-    fetchCategories();
-  }, []);
-
-  // Function to match routes
-  const matchRoute = (route) => {
-    return matchPath({ path: route }, location.pathname);
-  };
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
 
   return (
-    <div
-      className={`flex h-14 items-center justify-center border-b-[1px] border-b-richblack-700 ${
-        location.pathname !== "/" ? "bg-richblack-800" : ""
-      } transition-all duration-200`}
-    >
-      <div className="flex w-11/12 max-w-maxContent items-center justify-between">
-        {/* Logo */}
-        <Link to="/">
-          <img src={logo} alt="Logo" width={120} height={18} loading="lazy" />
-        </Link>
-        
-        {/* Navigation links */}
-        <nav className="hidden md:block">
-          <ul className="flex gap-x-6 text-richblack-25">
-            {NavbarLinks.map((link, index) => (
-              <li key={index}>
-                {link.title === "Catalog" ? (
-                  <>
-                    <div
-                      className={`group relative flex cursor-pointer items-center gap-1 ${
-                        matchRoute("/catalog/:catalogName") ? "text-yellow-25" : "text-richblack-25"
-                      }`}
-                    >
-                      <p>{link.title}</p>
-                      <BsChevronDown />
-                      <div className="invisible absolute left-[50%] top-[50%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[3em] flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[300px]">
-                        <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-5"></div>
-                        {loading ? (
-                          <p className="text-center">Loading...</p>
-                        ) : subLinks.length ? (
-                          subLinks.filter(subLink => subLink.courses.length > 0).map((subLink, i) => (
-                            <Link
-                              to={`/catalog/${subLink.name.split(" ").join("-").toLowerCase()}`}
-                              className="rounded-lg bg-transparent py-4 pl-4 hover:bg-richblack-50"
-                              key={i}
-                            >
-                              <p>{subLink.name}</p>
-                            </Link>
-                          ))
-                        ) : (
-                          <p className="text-center">No Courses Found</p>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <Link to={link.path}>
-                    <p className={`${matchRoute(link.path) ? "text-yellow-25" : "text-richblack-25"}`}>
-                      {link.title}
-                    </p>
+    <nav className="bg-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="h-8 w-8 bg-orange-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">D</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">DailyDine</span>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link
+              to="/"
+              className="text-gray-700 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              to="/nearby"
+              className="text-gray-700 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+            >
+              <FaMapMarkerAlt className="mr-1" />
+              Nearby
+            </Link>
+            
+            {token ? (
+              <div className="flex items-center space-x-4">
+                {user?.accountType === "mess_owner" && (
+                  <Link
+                    to="/dashboard/mess-dashboard"
+                    className="text-gray-700 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center"
+                  >
+                    <FaStore className="mr-1" />
+                    Dashboard
                   </Link>
                 )}
-              </li>
-            ))}
-          </ul>
-        </nav>
+                
+                <div className="relative group">
+                  <button className="flex items-center space-x-2 text-gray-700 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                    <FaUser />
+                    <span>{user?.name || "User"}</span>
+                  </button>
+                  
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <Link
+                      to="/dashboard/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                    >
+                      <FaSignOutAlt className="mr-2" />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/login"
+                  className="text-gray-700 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-orange-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-orange-600 transition-colors"
+                >
+                  Sign Up
+                </Link>
+                <Link
+                  to="/mess-signup"
+                  className="bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-900 transition-colors"
+                >
+                  Register Mess
+                </Link>
+              </div>
+            )}
+          </div>
 
-        {/* Login / Signup / Dashboard */}
-        <div className="hidden items-center gap-x-4 md:flex">
-          {user && user.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
-            <Link to="/dashboard/cart" className="relative">
-              <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
-              {totalItems > 0 && (
-                <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
-          )}
-          {!token && (
-            <>
-              <Link to="/login">
-                <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                  Log in
-                </button>
-              </Link>
-              <Link to="/signup">
-                <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                  Sign up
-                </button>
-              </Link>
-            </>
-          )}
-          {token && <ProfileDropdown />}
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={toggleMenu}
+              className="text-gray-700 hover:text-orange-500 focus:outline-none focus:text-orange-500"
+            >
+              {isMenuOpen ? <FaTimes className="h-6 w-6" /> : <FaBars className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button className="mr-4 md:hidden">
-          <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
-        </button>
       </div>
-    </div>
-  );
-};
 
-export default Navbar;
+      {/* Mobile Navigation */}
+      {isMenuOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
+            <Link
+              to="/"
+              className="text-gray-700 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/nearby"
+              className="text-gray-700 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium flex items-center"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <FaMapMarkerAlt className="mr-2" />
+              Nearby
+            </Link>
+            
+            {token ? (
+              <>
+                {user?.accountType === "mess_owner" && (
+                  <Link
+                    to="/dashboard/mess-dashboard"
+                    className="text-gray-700 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium flex items-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <FaStore className="mr-2" />
+                    Dashboard
+                  </Link>
+                )}
+                <Link
+                  to="/dashboard/profile"
+                  className="text-gray-700 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-gray-700 hover:text-orange-500 block w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center"
+                >
+                  <FaSignOutAlt className="mr-2" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-gray-700 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="text-gray-700 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+                <Link
+                  to="/mess-signup"
+                  className="text-gray-700 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Register Mess
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </nav>
+  )
+}
+
+export default Navbar

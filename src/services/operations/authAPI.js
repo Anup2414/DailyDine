@@ -1,9 +1,9 @@
 import { toast } from "react-hot-toast"
 
-import { setLoading, setToken } from "../../slices/authSlice"
+import { setLoading, setToken, setError, logout } from "../../slices/authSlice"
 import { resetCart } from "../../slices/cartSlice"
 import { setUser } from "../../slices/profileSlice"
-import { apiConnector } from "../apiConnector"
+import apiConnector from "../apiConnector"
 import { endpoints } from "../apis"
 
 const {
@@ -76,10 +76,13 @@ export function signUp(
         throw new Error(response.data.message)
       }
       toast.success("Signup Successful")
-      navigate("/login")
+      dispatch(setToken(response.data.token))
+      dispatch(setUser(response.data.user))
+      navigate("/dashboard")
     } catch (error) {
       console.log("SIGNUP API ERROR............", error)
-      toast.error("Signup Failed")
+      toast.error(error.response?.data?.message || "Signup Failed")
+      dispatch(setError(error.response?.data?.message || "Signup Failed"))
       navigate("/signup")
     }
     dispatch(setLoading(false))
@@ -89,34 +92,23 @@ export function signUp(
 
 export function login(email, password, navigate) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
     dispatch(setLoading(true))
     try {
-      const response = await apiConnector("POST", LOGIN_API, {
+      const response = await apiConnector.post("/auth/login", {
         email,
         password,
       })
 
-      console.log("LOGIN API RESPONSE............", response)
-
-      if (!response.data.success) {
-        throw new Error(response.data.message)
-      }
-
       toast.success("Login Successful")
       dispatch(setToken(response.data.token))
-      const userImage = response.data?.user?.image
-        ? response.data.user.image
-        : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.user.firstName} ${response.data.user.lastName}`
-      dispatch(setUser({ ...response.data.user, image: userImage }))
-      localStorage.setItem("token", JSON.stringify(response.data.token))
-      navigate("/dashboard/my-profile")
+      dispatch(setUser(response.data.user))
+      navigate("/dashboard")
     } catch (error) {
       console.log("LOGIN API ERROR............", error)
-      toast.error("Login Failed")
+      toast.error(error.response?.data?.message || "Login Failed")
+      dispatch(setError(error.response?.data?.message || "Login Failed"))
     }
     dispatch(setLoading(false))
-    toast.dismiss(toastId)
   }
 }
 
@@ -174,14 +166,50 @@ export function resetPassword(password, confirmPassword, token, navigate) {
   }
 }
 
-export function logout(navigate) {
-  return (dispatch) => {
-    dispatch(setToken(null))
-    dispatch(setUser(null))
-    dispatch(resetCart())
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    toast.success("Logged Out")
-    navigate("/")
+export function logoutUser(navigate) {
+  return async (dispatch) => {
+    try {
+      await apiConnector.post("/auth/logout")
+      toast.success("Logged Out")
+      dispatch(logout())
+      dispatch(resetCart())
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      navigate("/")
+    } catch (error) {
+      console.log("LOGOUT API ERROR............", error)
+      toast.error("Logout Failed")
+    }
+  }
+}
+
+export function getUserDetails(token, navigate) {
+  return async (dispatch) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await apiConnector.get("/auth/me")
+      dispatch(setUser(response.data.user))
+    } catch (error) {
+      console.log("GET USER DETAILS API ERROR............", error)
+      dispatch(logout())
+      navigate("/")
+    }
+    dispatch(setLoading(false))
+  }
+}
+
+export function updateUserProfile(profileData) {
+  return async (dispatch) => {
+    try {
+      const response = await apiConnector.put("/users/profile", profileData)
+      if (response.data.success) {
+        dispatch(setUser(response.data.user))
+        return { success: true, user: response.data.user }
+      }
+      return { success: false, message: response.data.message }
+    } catch (error) {
+      console.log("UPDATE USER PROFILE API ERROR............", error)
+      throw error
+    }
   }
 }
