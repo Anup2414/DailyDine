@@ -1,6 +1,6 @@
 {
-  "name": "studynotion-client",
-  "description": "This is the client side of the StudyNotion App",
+  "name": "dailydine-client",
+  "description": "This is the client side of the DailyDine App - A platform for mess menu management and discovery",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -33,7 +33,10 @@
     "showdown": "^2.1.0",
     "swiper": "^9.3.1",
     "video-react": "^0.16.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@googlemaps/js-api-loader": "^1.16.2",
+    "geolib": "^3.3.4",
+    "@react-google-maps/api": "^2.19.2"
   },
   "scripts": {
     "start": "react-scripts start",

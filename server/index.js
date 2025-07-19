@@ -1,10 +1,10 @@
 // Importing necessary modules and packages
 const express = require("express");
 const app = express();
-const userRoutes = require("./routes/user");
-const profileRoutes = require("./routes/profile");
-const courseRoutes = require("./routes/Course");
-const paymentRoutes = require("./routes/Payments");
+const authRoutes = require("./routes/Auth");
+const profileRoutes = require("./routes/Profile");
+const messRoutes = require("./routes/Mess");
+const reviewRoutes = require("./routes/Review");
 const contactUsRoute = require("./routes/Contact");
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
@@ -42,23 +42,23 @@ app.use(
 cloudinaryConnect();
 
 // Setting up routes
-app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/profile", profileRoutes);
-app.use("/api/v1/course", courseRoutes);
-app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/mess", messRoutes);
+app.use("/api/v1/review", reviewRoutes);
 app.use("/api/v1/reach", contactUsRoute);
 
 // Testing the server
 app.get("/", (req, res) => {
 	return res.json({
 		success: true,
-		message: "Your server is up and running ...",
+		message: "DailyDine server is up and running...",
 	});
 });
 
 // Listening to the server
 app.listen(PORT, () => {
-	console.log(`App is listening at ${PORT}`);
+	console.log(`DailyDine app is listening at ${PORT}`);
 });
 
 // End of code.

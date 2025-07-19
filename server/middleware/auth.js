@@ -27,9 +27,7 @@ exports.auth = async (req, res, next) => {
 			req.user = decode;
 		} catch (error) {
 			// If JWT verification fails, return 401 Unauthorized response
-			return res
-				.status(401)
-				.json({ success: false, message: "token is invalid" });
+			return res.status(401).json({ success: false, message: "token is invalid" });
 		}
 
 		// If JWT is valid, move on to the next middleware or request handler
@@ -42,14 +40,16 @@ exports.auth = async (req, res, next) => {
 		});
 	}
 };
-exports.isStudent = async (req, res, next) => {
+
+// Middleware to check if user is a mess owner
+exports.isMessOwner = async (req, res, next) => {
 	try {
 		const userDetails = await User.findOne({ email: req.user.email });
 
-		if (userDetails.accountType !== "Student") {
+		if (userDetails.accountType !== "MessOwner") {
 			return res.status(401).json({
 				success: false,
-				message: "This is a Protected Route for Students",
+				message: "This is a Protected Route for Mess Owners",
 			});
 		}
 		next();
@@ -59,34 +59,16 @@ exports.isStudent = async (req, res, next) => {
 			.json({ success: false, message: `User Role Can't be Verified` });
 	}
 };
-exports.isAdmin = async (req, res, next) => {
+
+// Middleware to check if user is a regular user
+exports.isUser = async (req, res, next) => {
 	try {
 		const userDetails = await User.findOne({ email: req.user.email });
 
-		if (userDetails.accountType !== "Admin") {
+		if (userDetails.accountType !== "User") {
 			return res.status(401).json({
 				success: false,
-				message: "This is a Protected Route for Admin",
-			});
-		}
-		next();
-	} catch (error) {
-		return res
-			.status(500)
-			.json({ success: false, message: `User Role Can't be Verified` });
-	}
-};
-exports.isInstructor = async (req, res, next) => {
-	try {
-		const userDetails = await User.findOne({ email: req.user.email });
-		console.log(userDetails);
-
-		console.log(userDetails.accountType);
-
-		if (userDetails.accountType !== "Instructor") {
-			return res.status(401).json({
-				success: false,
-				message: "This is a Protected Route for Instructor",
+				message: "This is a Protected Route for Users",
 			});
 		}
 		next();

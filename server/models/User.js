@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
 
     // Define the password field with type String and required
@@ -27,10 +28,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // Define the role field with type String and enum values of "Admin", "Student", or "Visitor"
+    // Define the role field with type String and enum values of "User" or "MessOwner"
     accountType: {
       type: String,
-      enum: ["Admin", "Student", "Instructor"],
+      enum: ["User", "MessOwner"],
       required: true,
     },
     active: {
@@ -67,11 +68,35 @@ const userSchema = new mongoose.Schema(
         ref: "courseProgress",
       },
     ],
+    // Location for users to find nearby messes
+    location: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point'
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        default: [0, 0]
+      },
+      address: {
+        type: String,
+        default: ""
+      }
+    },
+    // For mess owners
+    messDetails: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Mess",
+    },
 
     // Add timestamps for when the document is created and last modified
   },
   { timestamps: true }
 )
 
-// Export the Mongoose model for the user schema, using the name "user"
-module.exports = mongoose.model("user", userSchema)
+// Create geospatial index for location-based queries
+userSchema.index({ location: "2dsphere" })
+
+// Export the Mongoose model for the user schema, using the name "User"
+module.exports = mongoose.model("User", userSchema)
