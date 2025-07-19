@@ -9,7 +9,7 @@ import { endpoints } from "../apis"
 const {
   SENDOTP_API,
   SIGNUP_API,
-  LOGIN_API,
+  // LOGIN_API,
   RESETPASSTOKEN_API,
   RESETPASSWORD_API,
 } = endpoints
@@ -211,5 +211,32 @@ export function updateUserProfile(profileData) {
       console.log("UPDATE USER PROFILE API ERROR............", error)
       throw error
     }
+  }
+}
+
+export function signup(signupData, navigate) {
+  return async (dispatch) => {
+    const toastId = toast.loading("Loading...")
+    dispatch(setLoading(true))
+    try {
+      const response = await apiConnector.post("/auth/register", signupData)
+
+      console.log("SIGNUP API RESPONSE............", response)
+
+      if (response.data.success || response.data.user) {
+        toast.success("Signup Successful")
+        dispatch(setToken(response.data.token))
+        dispatch(setUser(response.data.user))
+        navigate("/dashboard")
+      } else {
+        throw new Error(response.data.message || "Signup failed")
+      }
+    } catch (error) {
+      console.log("SIGNUP API ERROR............", error)
+      toast.error(error.response?.data?.message || "Signup Failed")
+      dispatch(setError(error.response?.data?.message || "Signup Failed"))
+    }
+    dispatch(setLoading(false))
+    toast.dismiss(toastId)
   }
 }

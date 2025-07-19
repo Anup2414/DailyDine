@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaUser, FaMapMarkerAlt, FaPhone, FaClock, FaStore } from "react-icons/fa"
-import { signup } from "../services/operations/authAPI"
+import { signUp } from "../services/operations/authAPI"
 
 const MessSignup = () => {
   const dispatch = useDispatch()
@@ -394,9 +394,9 @@ const MessSignup = () => {
             />
             <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-900">
               I agree to the{" "}
-              <a href="#" className="text-orange-600 hover:text-orange-500">
+              <button type="button" className="text-orange-600 hover:text-orange-500 underline">
                 Terms and Conditions
-              </a>
+              </button>
             </label>
           </div>
 

@@ -61,14 +61,15 @@ export const updateMessProfile = (profileData) => {
     try {
       const response = await apiConnector.put("/messes/profile", profileData)
       toast.success("Profile updated successfully")
+      dispatch(setLoading(false))
       return { success: true, user: response.data.user }
     } catch (error) {
       console.log("UPDATE MESS PROFILE API ERROR............", error)
       toast.error(error.response?.data?.message || "Failed to update profile")
       dispatch(setError(error.response?.data?.message || "Failed to update profile"))
+      dispatch(setLoading(false))
       return { success: false, message: error.response?.data?.message || "Failed to update profile" }
     }
-    dispatch(setLoading(false))
   }
 }
 

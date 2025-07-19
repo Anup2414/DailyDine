@@ -28,7 +28,7 @@ const MenuManager = () => {
 
   useEffect(() => {
     fetchTodaysMenu()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchTodaysMenu = async () => {
     try {

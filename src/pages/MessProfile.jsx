@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { FiMapPin, FiPhone, FiMail, FiClock, FiEdit, FiSave, FiX } from "react-icons/fi";
 import { updateMessProfile } from "../services/operations/messAPI";
 import GoogleMap from "../components/GoogleMap";
 
 const MessProfile = () => {
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +35,7 @@ const MessProfile = () => {
       });
     }
     getCurrentLocation();
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {

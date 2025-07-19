@@ -34,10 +34,10 @@ const Home = () => {
     dispatch(getTodayMenus())
   }, [dispatch])
 
-  const getCategoryItems = (category) => {
-    const allItems = menus.flatMap(menu => menu.items || [])
-    return allItems.filter(item => item.category === category)
-  }
+  // const getCategoryItems = (category) => {
+  //   const allItems = menus.flatMap(menu => menu.items || [])
+  //   return allItems.filter(item => item.category === category)
+  // }
 
   const categories = ["breakfast", "lunch", "dinner", "snacks"]
 

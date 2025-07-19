@@ -3,7 +3,7 @@ import { FaMapMarkerAlt } from "react-icons/fa"
 
 const GoogleMap = ({ center, messes }) => {
   const mapRef = useRef(null)
-  const [map, setMap] = useState(null)
+  const [map, setMap] = useState(null) // eslint-disable-line no-unused-vars
   const [markers, setMarkers] = useState([])
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const GoogleMap = ({ center, messes }) => {
         }
       })
     }
-  }, [center, messes])
+  }, [center, messes]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fallback component if Google Maps fails to load
   if (!window.google) {

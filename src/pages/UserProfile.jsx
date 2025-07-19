@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { FiUser, FiMail, FiPhone, FiMapPin, FiEdit, FiSave, FiX, FiStar, FiClock } from "react-icons/fi";
 import { updateUserProfile } from "../services/operations/authAPI";
 import { getUserReviews } from "../services/operations/messAPI";
 
 const UserProfile = () => {
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +20,7 @@ const UserProfile = () => {
     }
   });
 
-  const [userLocation, setUserLocation] = useState(null);
+  // const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -34,14 +33,14 @@ const UserProfile = () => {
     }
     fetchUserReviews();
     getCurrentLocation();
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
+          // setUserLocation({ lat: latitude, lng: longitude });
           if (!user?.location?.coordinates[0]) {
             setProfileData(prev => ({
               ...prev,

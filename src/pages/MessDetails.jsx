@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { FiMapPin, FiPhone, FiClock, FiStar, FiHeart, FiShare2, FiMessageCircle } from "react-icons/fi";
+import { FiMapPin, FiPhone, FiClock, FiStar, FiShare2, FiMessageCircle } from "react-icons/fi";
 import { getMessDetails, getMessReviews } from "../services/operations/messAPI";
 import { getMessMenu } from "../services/operations/menuAPI";
 import { createReview } from "../services/operations/messAPI";
@@ -33,7 +33,7 @@ const MessDetails = () => {
   useEffect(() => {
     fetchMessDetails();
     getCurrentLocation();
-  }, [messId]);
+  }, [messId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {

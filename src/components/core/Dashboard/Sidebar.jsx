@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 import { sidebarLinks } from "../../../data/dashboard-links"
-import { logout } from "../../../services/operations/authAPI"
+import { logoutUser } from "../../../services/operations/authAPI"
 import ConfirmationModal from "../../Common/ConfirmationModal"
 import SidebarLink from "./SidebarLink"
 
@@ -50,7 +50,7 @@ export default function Sidebar() {
                 text2: "You will be logged out of your account.",
                 btn1Text: "Logout",
                 btn2Text: "Cancel",
-                btn1Handler: () => dispatch(logout(navigate)),
+                btn1Handler: () => dispatch(logoutUser(navigate)),
                 btn2Handler: () => setConfirmationModal(null),
               })
             }

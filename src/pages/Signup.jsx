@@ -185,9 +185,9 @@ const Signup = () => {
             />
             <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-900">
               I agree to the{" "}
-              <a href="#" className="text-orange-600 hover:text-orange-500">
+              <button type="button" className="text-orange-600 hover:text-orange-500 underline">
                 Terms and Conditions
-              </a>
+              </button>
             </label>
           </div>
 

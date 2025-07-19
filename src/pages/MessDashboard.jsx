@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { FiCalendar, FiUsers, FiStar, FiSettings } from "react-icons/fi";
 import MenuManager from "../components/MenuManager";
@@ -6,11 +6,11 @@ import MenuManager from "../components/MenuManager";
 const MessDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('menu');
-  const [dashboardStats, setDashboardStats] = useState({
+  const dashboardStats = {
     totalMenuItems: 0,
     totalReviews: 0,
     averageRating: 0
-  });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-300">
