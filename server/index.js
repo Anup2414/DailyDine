@@ -40,6 +40,9 @@ app.use(
 	})
 );
 
+// Serve static files for uploaded images
+app.use('/uploads', express.static('uploads'));
+
 
 // Database connection
 mongoose

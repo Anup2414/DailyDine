@@ -5,6 +5,7 @@ import { FaMapMarkerAlt, FaSearch, FaStar, FaPhone, FaClock } from "react-icons/
 import { getTodayMenus } from "../services/operations/menuAPI"
 import { getNearbyMesses } from "../services/operations/messAPI"
 import GoogleMap from "../components/GoogleMap"
+import foodPlaceholder from "../assets/Images/food-placeholder.svg"
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -41,7 +42,7 @@ const Home = () => {
   const categories = ["breakfast", "lunch", "dinner", "snacks"]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <div className="container mx-auto px-4 py-16">
@@ -73,36 +74,52 @@ const Home = () => {
       {/* Today's Menus Section */}
       <div className="container mx-auto px-4 py-12">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">Today's Menus</h2>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Today's Menus</h2>
           <input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
         </div>
 
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading menus...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading menus...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {menus.map((menu) => (
-              <div key={menu._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div key={menu._id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                {/* Menu Header Image */}
+                {menu.items && menu.items.length > 0 && menu.items[0].image && (
+                  <div className="h-48 bg-gray-200 dark:bg-gray-700">
+                    <img
+                      src={menu.items[0].image.startsWith('http') 
+                        ? menu.items[0].image 
+                        : `${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${menu.items[0].image}`
+                      }
+                      alt={menu.items[0].name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = foodPlaceholder;
+                      }}
+                    />
+                  </div>
+                )}
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800">
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
                       {menu.messOwnerId?.messName || "Mess Name"}
                     </h3>
                     <div className="flex items-center text-yellow-500">
                       <FaStar />
-                      <span className="ml-1 text-sm text-gray-600">4.5</span>
+                                              <span className="ml-1 text-sm text-gray-600 dark:text-gray-300">4.5</span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center text-gray-600 mb-4">
+                  <div className="flex items-center text-gray-600 dark:text-gray-300 mb-4">
                     <FaMapMarkerAlt className="mr-2" />
                     <span className="text-sm">{menu.messOwnerId?.address || "Address not available"}</span>
                   </div>
@@ -114,12 +131,32 @@ const Home = () => {
                       
                       return (
                         <div key={category}>
-                          <h4 className="font-semibold text-gray-700 capitalize mb-2">{category}</h4>
+                          <h4 className="font-semibold text-gray-700 dark:text-gray-300 capitalize mb-2">{category}</h4>
                           <div className="space-y-2">
                             {categoryItems.slice(0, 3).map((item, index) => (
-                              <div key={index} className="flex justify-between text-sm">
-                                <span className="text-gray-600">{item.name}</span>
-                                <span className="font-semibold">₹{item.price}</span>
+                              <div key={index} className="flex items-center justify-between text-sm mb-2">
+                                <div className="flex items-center space-x-3">
+                                  {item.image && (
+                                    <img
+                                      src={item.image.startsWith('http') 
+                                        ? item.image 
+                                        : `${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${item.image}`
+                                      }
+                                      alt={item.name}
+                                      className="w-10 h-10 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
+                                      onError={(e) => {
+                                        e.target.style.display = 'none';
+                                      }}
+                                    />
+                                  )}
+                                  <div>
+                                    <span className="text-gray-600 dark:text-gray-300">{item.name}</span>
+                                    {item.isVegetarian && (
+                                      <span className="ml-1 text-green-500 text-xs">🌱</span>
+                                    )}
+                                  </div>
+                                </div>
+                                <span className="font-semibold text-orange-600 dark:text-orange-400">₹{item.price}</span>
                               </div>
                             ))}
                             {categoryItems.length > 3 && (
@@ -131,12 +168,12 @@ const Home = () => {
                     })}
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-gray-600">
-                        <FaPhone className="mr-2" />
-                        <span className="text-sm">{menu.messOwnerId?.phoneNumber || "N/A"}</span>
-                      </div>
+                                      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-gray-600 dark:text-gray-300">
+                          <FaPhone className="mr-2" />
+                          <span className="text-sm">{menu.messOwnerId?.phoneNumber || "N/A"}</span>
+                        </div>
                       <Link
                         to={`/mess/${menu.messOwnerId?._id}`}
                         className="bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-600 transition-colors"
@@ -153,8 +190,8 @@ const Home = () => {
 
         {menus.length === 0 && !loading && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No menus available for today</p>
-            <p className="text-gray-500 mt-2">Check back later or explore nearby messes</p>
+            <p className="text-gray-600 dark:text-gray-300 text-lg">No menus available for today</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Check back later or explore nearby messes</p>
           </div>
         )}
       </div>
